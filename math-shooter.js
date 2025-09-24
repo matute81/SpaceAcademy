@@ -418,11 +418,12 @@ class AsteroidMathShooter {
             this.asteroids = [];
 
         } else {
-            // Wrong answer
+            // Wrong answer - lose a life!
             this.createExplosion(targetAsteroid.x, targetAsteroid.y);
             this.destroyAsteroid(targetAsteroid);
             this.shakeScreen();
-            document.getElementById('gameStatus').textContent = `Wrong! Look for ${this.correctAnswer}`;
+            this.loseLife();
+            document.getElementById('gameStatus').textContent = `Wrong! -1 Life. Look for ${this.correctAnswer}`;
         }
     }
 
