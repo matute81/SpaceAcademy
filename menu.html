@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Academy - Mission Control</title>
+    <link rel="stylesheet" href="space-academy.css">
+</head>
+<body class="menu-page">
+    <div class="stars"></div>
+    
+    <header class="academy-header">
+        <div class="header-content">
+            <h1>🚀 SPACE ACADEMY</h1>
+            <div class="astronaut-info">
+                <span>👨‍🚀 Astronaut: <span id="astronautName">Cadet</span></span>
+            </div>
+        </div>
+    </header>
+    
+    <div class="mission-control">
+        <h2>🎯 Mission Control Center</h2>
+        <p>Choose your learning mission, Astronaut!</p>
+        
+        <div class="mission-grid">
+            <div class="mission-card lessons-card" onclick="navigateToLessons()">
+                <div class="mission-icon">🤖</div>
+                <h3>AI Tutor Lessons</h3>
+                <p>Learn with your personal AI instructor</p>
+                <div class="mission-status">Ready for Launch</div>
+            </div>
+            
+            <div class="mission-card challenges-card" onclick="navigateToChallenges()">
+                <div class="mission-icon">🎮</div>
+                <h3>Space Challenges</h3>
+                <p>Test your skills in cosmic games</p>
+                <div class="mission-status">Adventure Awaits</div>
+            </div>
+        </div>
+        
+        <button class="back-btn" onclick="goBack()">← Return to Launch Pad</button>
+    </div>
+    
+    <script src="sounds.js"></script>
+    <script src="animations.js"></script>
+    <script src="navigation.js"></script>
+</body>
+</html>

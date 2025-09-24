@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Academy - Math Mission</title>
+    <link rel="stylesheet" href="space-academy.css">
+</head>
+<body class="game-page">
+    <div class="stars"></div>
+    
+    <header class="academy-header">
+        <div class="header-content">
+            <h1>🚀 SPACE ACADEMY</h1>
+            <div class="astronaut-info">
+                <span>👨‍🚀 Astronaut: <span id="astronautName">Cadet</span></span>
+            </div>
+        </div>
+    </header>
+    
+    <div class="game-container">
+        <!-- Game UI -->
+        <div class="game-ui">
+            <div class="ui-left">
+                <span class="ui-label">Score:</span>
+                <span id="score" class="ui-value">0</span>
+            </div>
+            <div class="ui-center">
+                <span class="ui-label">Wave:</span>
+                <span id="wave" class="ui-value">1</span>
+            </div>
+            <div class="ui-right">
+                <span class="ui-label">Lives:</span>
+                <span id="lives" class="ui-value">❤️❤️❤️</span>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+        <!-- Question Display -->
+        <div class="question-display">
+            <div class="current-question">
+                <span id="currentQuestion">Press START to begin your mission!</span>
+            </div>
+        </div>
+
+        <!-- Game Controls -->
+        <div class="game-controls">
+            <div class="game-status">
+                <span id="gameStatus">Use ← → arrows to move, SPACE to shoot the correct answer!</span>
+            </div>
+            <div class="game-instructions">
+                <small>🎮 Move ship with ← → arrows | Aim at correct answer | Press SPACE to shoot</small>
+            </div>
+        </div>
+
+        <!-- Game Menu -->
+        <div class="game-menu" id="gameMenu">
+            <button id="startBtn" onclick="startGame()" class="game-btn primary">🚀 START MISSION</button>
+            <button onclick="goToChallenges()" class="game-btn secondary">← Back to Challenges</button>
+        </div>
+
+        <!-- Boss Encounter Overlay -->
+        <div class="boss-overlay" id="bossOverlay" style="display: none;">
+            <div class="boss-content">
+                <h2>🛸 BOSS ENCOUNTER</h2>
+                <div class="boss-story" id="bossStory">Loading transmission...</div>
+                <div class="boss-problem" id="bossProblem"></div>
+                <div class="boss-controls">
+                    <div class="boss-answers" id="bossAnswers">
+                        <!-- Boss answer choices will be populated here -->
+                    </div>
+                    <div class="boss-instruction">
+                        <small>Move your ship and shoot the correct answer!</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div class="game-over" id="gameOver" style="display: none;">
+            <div class="game-over-content">
+                <h2 id="gameOverTitle">Mission Complete!</h2>
+                <div class="final-stats">
+                    <p>Final Score: <span id="finalScore">0</span></p>
+                    <p>Waves Completed: <span id="finalWave">0</span></p>
+                    <p>Accuracy: <span id="finalAccuracy">0%</span></p>
+                </div>
+                <div class="game-over-buttons">
+                    <button onclick="restartGame()" class="game-btn primary">🚀 PLAY AGAIN</button>
+                    <button onclick="goToChallenges()" class="game-btn secondary">← Back to Challenges</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="sounds.js"></script>
+    <script src="animations.js"></script>
+    <script src="math-shooter.js"></script>
+    <script src="navigation.js"></script>
+</body>
+</html>

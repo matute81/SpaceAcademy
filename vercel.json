@@ -1,0 +1,17 @@
+{
+  "functions": {
+    "api/chat.js": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/welcome.html"
+    },
+    {
+      "source": "/lessons",
+      "destination": "/index.html"
+    }
+  ]
+}

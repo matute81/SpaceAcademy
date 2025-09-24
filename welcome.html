@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Academy - Welcome</title>
+    <link rel="stylesheet" href="space-academy.css">
+</head>
+<body class="welcome-page">
+    <div class="stars"></div>
+    <div class="welcome-container">
+        <div class="academy-logo">
+            <h1>🚀 SPACE ACADEMY</h1>
+            <p class="tagline">Explore the Universe of Learning</p>
+        </div>
+        
+        <div class="welcome-card">
+            <h2>Welcome, Future Astronaut!</h2>
+            <p>Enter your name to begin your cosmic learning journey</p>
+            
+            <div class="name-input-container">
+                <input type="text" id="studentName" placeholder="Enter your name..." maxlength="20">
+                <button id="launchBtn" onclick="launchAcademy()">
+                    🚀 Launch Academy
+                </button>
+            </div>
+        </div>
+        
+        <div class="floating-elements">
+            <div class="planet planet-1">🪐</div>
+            <div class="planet planet-2">🌍</div>
+            <div class="planet planet-3">🌙</div>
+        </div>
+    </div>
+    
+    <script src="sounds.js"></script>
+    <script src="animations.js"></script>
+    <script src="navigation.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Academy - Challenges</title>
+    <link rel="stylesheet" href="space-academy.css">
+</head>
+<body class="challenges-page">
+    <div class="stars"></div>
+    
+    <header class="academy-header">
+        <div class="header-content">
+            <h1>🚀 SPACE ACADEMY</h1>
+            <div class="astronaut-info">
+                <span>👨‍🚀 Astronaut: <span id="astronautName">Cadet</span></span>
+            </div>
+        </div>
+    </header>
+    
+    <div class="challenges-container">
+        <h2>🎮 Space Challenges</h2>
+        <p>Choose your cosmic challenge, brave astronaut!</p>
+        
+        <div class="games-grid">
+            <div class="game-card math-game" onclick="launchMathGame()">
+                <div class="game-icon">🔢</div>
+                <h3>Math Mission</h3>
+                <p>Navigate through mathematical asteroids</p>
+                <div class="game-status coming-soon">Coming Soon</div>
+            </div>
+            
+            <div class="game-card chinese-game" onclick="launchChineseGame()">
+                <div class="game-icon">🈯</div>
+                <h3>Chinese Quest</h3>
+                <p>Explore the galaxy of Chinese characters</p>
+                <div class="game-status coming-soon">Coming Soon</div>
+            </div>
+        </div>
+        
+        <button class="back-btn" onclick="goToMenu()">← Back to Mission Control</button>
+    </div>
+    
+    <script src="sounds.js"></script>
+    <script src="animations.js"></script>
+    <script src="navigation.js"></script>
+</body>
+</html>
