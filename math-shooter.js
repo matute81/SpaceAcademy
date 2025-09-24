@@ -450,13 +450,8 @@ class AsteroidMathShooter {
     // Removed - no longer needed with new format
 
     checkCollisions() {
-        // Check if any asteroid reached the ship area
-        this.asteroids.forEach((asteroid, index) => {
-            if (asteroid.y > this.ship.y - 20) {
-                this.asteroids.splice(index, 1);
-                this.loseLife();
-            }
-        });
+        // No collision penalties - asteroids can fall harmlessly
+        // Only lose lives for shooting wrong answers
     }
 
     loseLife() {
@@ -471,7 +466,7 @@ class AsteroidMathShooter {
     addScore(points) {
         this.score += points;
         this.updateUI();
-        
+
         // Check for victory condition
         if (this.score >= 5000) {
             this.gameVictory();
@@ -781,7 +776,7 @@ class AsteroidMathShooter {
 
         document.getElementById('gameOver').style.display = 'flex';
     }
-    
+
     gameVictory() {
         this.gameState = 'gameOver';
 
