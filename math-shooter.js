@@ -12,7 +12,7 @@ class AsteroidMathShooter {
         this.wave = 1;
         this.asteroids = [];
         this.particles = [];
-        this.ship = { x: 400, y: 550, width: 40, height: 30 };
+        this.ship = { x: 350, y: 450, width: 40, height: 30 };
         this.laser = null; // For laser beam effect
 
         // Game mechanics
@@ -223,7 +223,12 @@ class AsteroidMathShooter {
             // Remove asteroids that hit the bottom
             if (asteroid.y > this.canvas.height + 50) {
                 this.asteroids.splice(index, 1);
-                this.loseLife();
+                
+                // Only lose life if this was the correct answer
+                if (asteroid.isCorrect) {
+                    this.loseLife();
+                    document.getElementById('gameStatus').textContent = `Missed the correct answer! -1 Life`;
+                }
             }
         });
 
