@@ -32,11 +32,11 @@ class AsteroidMathShooter {
         };
         this.shipSpeed = 5;
 
-        // Difficulty progression (slower speeds)
+        // Difficulty progression (moderate speeds)
         this.difficulty = {
-            easy: { operations: ['+', '-'], range: [1, 20], points: 10, speed: 0.3, choices: 3 },
-            medium: { operations: ['+', '-', '×'], range: [1, 50], points: 25, speed: 0.5, choices: 4 },
-            hard: { operations: ['×', '÷'], range: [1, 100], points: 50, speed: 0.7, choices: 4 }
+            easy: { operations: ['+', '-'], range: [1, 20], points: 10, speed: 0.8, choices: 3 },
+            medium: { operations: ['+', '-', '×'], range: [1, 50], points: 25, speed: 1.0, choices: 4 },
+            hard: { operations: ['×', '÷'], range: [1, 100], points: 50, speed: 1.2, choices: 4 }
         };
 
         // Boss system
@@ -182,18 +182,7 @@ class AsteroidMathShooter {
             this.ctx.textAlign = 'center';
             this.ctx.fillText(asteroid.answer.toString(), asteroid.x, asteroid.y + 7);
 
-            // Correct answer indicator (green glow)
-            if (asteroid.isCorrect) {
-                this.ctx.strokeStyle = '#00ff00';
-                this.ctx.lineWidth = 3;
-                this.ctx.strokeRect(asteroid.x - 45, asteroid.y - 25, 90, 50);
-
-                // Add glow effect
-                this.ctx.shadowColor = '#00ff00';
-                this.ctx.shadowBlur = 10;
-                this.ctx.strokeRect(asteroid.x - 45, asteroid.y - 25, 90, 50);
-                this.ctx.shadowBlur = 0;
-            }
+            // No visual indicator for correct answer - let kids figure it out!
         });
     }
 
@@ -332,7 +321,7 @@ class AsteroidMathShooter {
                 answer: choice,
                 isCorrect: choice === this.correctAnswer,
                 points: difficulty.points,
-                color: choice === this.correctAnswer ? '#4CAF50' : this.getDifficultyColor(difficulty)
+                color: this.getDifficultyColor(difficulty)
             };
 
             this.asteroids.push(asteroid);
