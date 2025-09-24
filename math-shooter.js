@@ -471,6 +471,11 @@ class AsteroidMathShooter {
     addScore(points) {
         this.score += points;
         this.updateUI();
+        
+        // Check for victory condition
+        if (this.score >= 5000) {
+            this.gameVictory();
+        }
     }
 
     checkWaveComplete() {
@@ -771,14 +776,27 @@ class AsteroidMathShooter {
         document.getElementById('finalWave').textContent = this.wave - 1;
         document.getElementById('finalAccuracy').textContent = accuracy + '%';
 
-        const title = this.score > 1000 ? 'Excellent Mission!' : this.score > 500 ? 'Good Mission!' : 'Mission Complete!';
-        document.getElementById('gameOverTitle').textContent = title;
+        // Game Over (ran out of lives)
+        document.getElementById('gameOverTitle').textContent = 'Mission Failed! 💥';
 
         document.getElementById('gameOver').style.display = 'flex';
+    }
+    
+    gameVictory() {
+        this.gameState = 'gameOver';
 
-        // Disable controls
-        document.getElementById('answerInput').disabled = true;
-        document.getElementById('shootBtn').disabled = true;
+        // Calculate final stats
+        const accuracy = this.totalAnswers > 0 ? Math.round((this.correctAnswers / this.totalAnswers) * 100) : 0;
+
+        // Show victory screen
+        document.getElementById('finalScore').textContent = this.score;
+        document.getElementById('finalWave').textContent = this.wave - 1;
+        document.getElementById('finalAccuracy').textContent = accuracy + '%';
+
+        // Victory message
+        document.getElementById('gameOverTitle').textContent = 'Mission Complete! 🎉';
+
+        document.getElementById('gameOver').style.display = 'flex';
     }
 }
 
