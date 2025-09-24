@@ -1,5 +1,5 @@
 {
-  "name": "ai-chatbot-server",
+  "name": "space-academy-server",
   "version": "1.0.0",
   "description": "Simple server for AI chatbot with xAI integration",
   "main": "server.js",
@@ -11,8 +11,7 @@
     "cors": "^2.8.5",
     "node-fetch": "^2.6.7"
   },
-  "devDependencies": {},
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   }
 }
