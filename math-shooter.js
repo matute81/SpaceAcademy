@@ -220,15 +220,10 @@ class AsteroidMathShooter {
         this.asteroids.forEach((asteroid, index) => {
             asteroid.y += asteroid.speed;
 
-            // Remove asteroids that hit the bottom
+            // Remove asteroids that hit the bottom - no life penalty
             if (asteroid.y > this.canvas.height + 50) {
                 this.asteroids.splice(index, 1);
-                
-                // Only lose life if this was the correct answer
-                if (asteroid.isCorrect) {
-                    this.loseLife();
-                    document.getElementById('gameStatus').textContent = `Missed the correct answer! -1 Life`;
-                }
+                // No life penalty for letting asteroids fall
             }
         });
 
