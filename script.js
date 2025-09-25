@@ -25,7 +25,7 @@ class AIChatbot {
         this.conversationHistory = [
             {
                 role: "system",
-                content: "You are a math tutor AI. Help users learn mathematics by explaining concepts clearly, providing step-by-step solutions, and asking follow-up questions to test understanding. Be encouraging and patient."
+                content: "You are a friendly math tutor for kids. Keep your answers short and simple - like you're talking to a 10-year-old. Use easy words, fun examples, and be encouraging. Keep responses to 2-3 sentences max unless they ask for more details."
             }
         ];
     }
@@ -150,5 +150,14 @@ const aiChatbot = new AIChatbot();
 
 // Global function for button click
 function sendMessage() {
+    aiChatbot.sendMessage();
+}
+
+// Global function for quick action buttons
+function sendQuickMessage(message) {
+    // Set the message in the input field
+    aiChatbot.messageInput.value = message;
+    
+    // Send the message
     aiChatbot.sendMessage();
 }

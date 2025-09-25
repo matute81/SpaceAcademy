@@ -253,8 +253,8 @@ class AsteroidMathShooter {
         this.currentQuestion = problem.question;
         this.correctAnswer = problem.answer;
 
-        // Display question
-        document.getElementById('currentQuestion').textContent = `Solve: ${this.currentQuestion}`;
+        // Display question in game status
+        document.getElementById('gameStatus').textContent = `Solve: ${this.currentQuestion}`;
 
         // Generate answer choices
         const choices = this.generateAnswerChoices(problem.answer, difficultyLevel);
@@ -411,8 +411,7 @@ class AsteroidMathShooter {
             this.addScore(targetAsteroid.points);
             this.createExplosion(targetAsteroid.x, targetAsteroid.y);
 
-            // Success feedback
-            document.getElementById('gameStatus').textContent = `Correct! +${targetAsteroid.points} points`;
+            // Success feedback - keep status unchanged
 
             // Clear all asteroids (question complete)
             this.asteroids = [];
@@ -423,7 +422,7 @@ class AsteroidMathShooter {
             this.destroyAsteroid(targetAsteroid);
             this.shakeScreen();
             this.loseLife();
-            document.getElementById('gameStatus').textContent = `Wrong! -1 Life. Look for ${this.correctAnswer}`;
+            // Wrong answer feedback - keep status unchanged
         }
     }
 
@@ -488,7 +487,7 @@ class AsteroidMathShooter {
             this.startBossEncounter();
         } else {
             this.updateUI();
-            document.getElementById('gameStatus').textContent = `Wave ${this.wave} - Get ready!`;
+            // Wave complete - keep status unchanged
         }
     }
 
@@ -500,8 +499,7 @@ class AsteroidMathShooter {
         document.getElementById('bossOverlay').style.display = 'flex';
         document.getElementById('bossStory').textContent = 'Generating boss encounter...';
 
-        // Clear current question display
-        document.getElementById('currentQuestion').textContent = 'BOSS ENCOUNTER!';
+        // Boss encounter started
 
         try {
             // Generate boss encounter with AI
@@ -522,10 +520,13 @@ class AsteroidMathShooter {
         {
             "story": "Brief dramatic story (2-3 sentences and less than 50 words)",
             "problem": "Math word problem that results in a numerical answer",
-            "answer": numerical_answer_only,
+            "correctAnswer": numerical_answer_only,
+            "choices": [choice1, choice2, choice3, choice4],
             "successMessage": "Victory message",
             "failMessage": "Failure message but encouraging"
         }
+        
+        IMPORTANT: The "choices" array must contain exactly 4 numbers: the correct answer plus 3 plausible wrong answers. Make sure the correct answer is included in the choices array.
         
         The answer should be a single number that the player will choose from multiple choice options.
         Make the math problem challenging but fair for wave ${this.wave}.
@@ -576,11 +577,23 @@ class AsteroidMathShooter {
 
     validateProblemAnswer() {
         const problem = this.bossData.problem;
-        const aiAnswer = parseInt(this.bossData.answer);
+        const aiAnswer = parseInt(this.bossData.correctAnswer);
+        const choices = this.bossData.choices.map(choice => parseInt(choice));
 
         console.log('🔍 VALIDATION CHECK:');
         console.log('Problem:', problem);
         console.log('AI Answer:', aiAnswer);
+        console.log('AI Choices:', choices);
+
+        // Validate that correct answer is in choices
+        if (!choices.includes(aiAnswer)) {
+            console.error('🚨 CRITICAL: Correct answer not in choices!');
+            console.error('Adding correct answer to choices and removing a random wrong answer');
+            choices[0] = aiAnswer; // Replace first choice with correct answer
+            this.bossData.choices = choices;
+        } else {
+            console.log('✅ Correct answer found in choices');
+        }
 
         // Try to extract and calculate the actual math from the problem
         const mathMatch = problem.match(/(\d+)\s*[×x*]\s*(\d+)/);
@@ -605,50 +618,6 @@ class AsteroidMathShooter {
             }
         }
 
-        // Check for addition
-        const addMatch = problem.match(/(\d+)\s*[+]\s*(\d+)/);
-        if (addMatch) {
-            const num1 = parseInt(addMatch[1]);
-            const num2 = parseInt(addMatch[2]);
-            const calculatedAnswer = num1 + num2;
-
-            console.log(`Found addition: ${num1} + ${num2} = ${calculatedAnswer}`);
-
-            if (calculatedAnswer !== aiAnswer) {
-                console.error('🚨 ADDITION MISMATCH!');
-                this.bossData.answer = calculatedAnswer;
-            }
-        }
-
-        // Check for subtraction
-        const subMatch = problem.match(/(\d+)\s*[-]\s*(\d+)/);
-        if (subMatch) {
-            const num1 = parseInt(subMatch[1]);
-            const num2 = parseInt(subMatch[2]);
-            const calculatedAnswer = num1 - num2;
-
-            console.log(`Found subtraction: ${num1} - ${num2} = ${calculatedAnswer}`);
-
-            if (calculatedAnswer !== aiAnswer) {
-                console.error('🚨 SUBTRACTION MISMATCH!');
-                this.bossData.answer = calculatedAnswer;
-            }
-        }
-
-        // Check for division
-        const divMatch = problem.match(/(\d+)\s*[÷/]\s*(\d+)/);
-        if (divMatch) {
-            const num1 = parseInt(divMatch[1]);
-            const num2 = parseInt(divMatch[2]);
-            const calculatedAnswer = num1 / num2;
-
-            console.log(`Found division: ${num1} ÷ ${num2} = ${calculatedAnswer}`);
-
-            if (calculatedAnswer !== aiAnswer) {
-                console.error('🚨 DIVISION MISMATCH!');
-                this.bossData.answer = calculatedAnswer;
-            }
-        }
     }
 
     parseAIResponse(response) {
@@ -667,8 +636,9 @@ class AsteroidMathShooter {
         // Return error message to know if AI is working
         this.bossData = {
             story: "ERROR: AI system offline!",
-            problem: "Fallback mode activated - this means the AI API is not working",
-            answer: 42,
+            problem: "Fallback mode: What is 6 × 7?",
+            correctAnswer: 42,
+            choices: [42, 35, 48, 54],
             successMessage: "Fallback test passed!",
             failMessage: "This is the fallback system"
         };
@@ -685,28 +655,35 @@ class AsteroidMathShooter {
     }
 
     createBossAnswerChoices() {
-        // Ensure correct answer is a number
-        const correctAnswer = parseInt(this.bossData.answer);
-        console.log('Boss correct answer:', correctAnswer, 'Type:', typeof correctAnswer);
+        // Use AI-provided choices directly
+        const correctAnswer = parseInt(this.bossData.correctAnswer);
+        const choices = this.bossData.choices.map(choice => parseInt(choice));
 
-        const choices = this.generateAnswerChoices(correctAnswer, { choices: 4 });
-        console.log('Boss answer choices:', choices);
+        console.log('Boss correct answer:', correctAnswer);
+        console.log('Boss answer choices from AI:', choices);
+        console.log('Correct answer included in choices:', choices.includes(correctAnswer));
+
+        // Shuffle the choices so correct answer isn't always in same position
+        const shuffledChoices = [...choices];
+        for (let i = shuffledChoices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledChoices[i], shuffledChoices[j]] = [shuffledChoices[j], shuffledChoices[i]];
+        }
 
         const bossAnswersDiv = document.getElementById('bossAnswers');
         bossAnswersDiv.innerHTML = '';
 
-        choices.forEach((choice, index) => {
+        shuffledChoices.forEach((choice, index) => {
             const answerBtn = document.createElement('button');
             answerBtn.className = 'boss-answer-btn';
             answerBtn.textContent = choice;
-            // Convert to number for comparison
-            answerBtn.onclick = () => this.selectBossAnswer(parseInt(choice));
+            answerBtn.onclick = () => this.selectBossAnswer(choice);
             bossAnswersDiv.appendChild(answerBtn);
         });
     }
 
     selectBossAnswer(selectedAnswer) {
-        const correctAnswer = parseInt(this.bossData.answer);
+        const correctAnswer = parseInt(this.bossData.correctAnswer);
 
         console.log('Selected:', selectedAnswer, 'Correct:', correctAnswer);
         console.log('Match:', selectedAnswer === correctAnswer);
@@ -739,7 +716,7 @@ class AsteroidMathShooter {
         if (this.lives <= 0) {
             this.gameOver();
         } else {
-            document.getElementById('currentQuestion').textContent = 'Get ready for the next wave!';
+            // Next wave - keep status unchanged
         }
     }
 
@@ -806,7 +783,7 @@ function startGame() {
     game.gameState = 'playing';
     game.updateUI();
 
-    document.getElementById('gameStatus').textContent = 'Move your ship and shoot the correct answers!';
+    // Keep the game status empty to maintain consistent UI
 }
 
 function restartGame() {
