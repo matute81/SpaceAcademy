@@ -556,7 +556,15 @@ class AsteroidMathShooter {
             console.log('Raw AI response:', aiResponse);
             this.bossData = JSON.parse(aiResponse);
             console.log('Parsed boss data:', this.bossData);
-            console.log('Answer from AI:', this.bossData.answer, 'Type:', typeof this.bossData.answer);
+
+            // Check if we have the expected fields
+            if (!this.bossData.correctAnswer && this.bossData.answer) {
+                this.bossData.correctAnswer = this.bossData.answer;
+            }
+
+            if (!this.bossData.choices) {
+                console.warn('AI response missing choices array, will use fallback generation');
+            }
 
             // CRITICAL: Validate that the answer matches the problem
             this.validateProblemAnswer();
@@ -650,12 +658,20 @@ class AsteroidMathShooter {
     }
 
     createBossAnswerChoices() {
-        // Use AI-provided choices directly
-        const correctAnswer = parseInt(this.bossData.correctAnswer);
-        const choices = this.bossData.choices.map(choice => parseInt(choice));
+        // Use AI-provided choices directly, with fallback if missing
+        const correctAnswer = parseInt(this.bossData.correctAnswer || this.bossData.answer || 42);
+
+        let choices;
+        if (this.bossData.choices && Array.isArray(this.bossData.choices)) {
+            choices = this.bossData.choices.map(choice => parseInt(choice));
+        } else {
+            // Fallback: generate choices if AI didn't provide them
+            console.warn('AI did not provide choices array, generating fallback choices');
+            choices = this.generateAnswerChoices(correctAnswer, { choices: 4 });
+        }
 
         console.log('Boss correct answer:', correctAnswer);
-        console.log('Boss answer choices from AI:', choices);
+        console.log('Boss answer choices:', choices);
         console.log('Correct answer included in choices:', choices.includes(correctAnswer));
 
         // Shuffle the choices so correct answer isn't always in same position
