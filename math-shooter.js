@@ -506,40 +506,40 @@ class AsteroidMathShooter {
     }
 
     async generateBossEncounter() {
-        const prompt = `Create a space-themed math boss encounter for wave ${this.wave}. 
-        The player is playing games to learn Math. 
-        Here is the Player's stats where you can assess the player's ability and create the difficulty of the math problem accordingly.
-        Player stats: Score ${this.score}, ${this.correctAnswers}/${this.totalAnswers} correct answers.
-        
-        Return JSON with:
-        {
-            "story": "Brief dramatic story (2-3 sentences and less than 50 words)",
-            "problem": "Math word problem that results in a numerical answer",
-            "correctAnswer": numerical_answer_only,
-            "choices": [choice1, choice2, choice3, choice4],
-            "successMessage": "Victory message",
-            "failMessage": "Failure message but encouraging"
-        }
-        
-        CRITICAL REQUIREMENT: The "choices" array must contain exactly 4 numbers:
-        1. The correct answer (from "correctAnswer" field)
-        2. Three plausible wrong answers
-        
-        Example: If correctAnswer is 42, choices might be [42, 35, 48, 54]
-        
-        VERIFY: The correct answer MUST be one of the 4 choices in the array!
-        
-        The answer should be a single number that the player will choose from multiple choice options.
-        Make the math problem challenging but fair for wave ${this.wave}.
-        
-        Difficulty guidelines:
-        - Wave 1-3: Basic addition/subtraction (numbers 1-50)
-        - Wave 4-6: Multiplication/division (single digit × single digit)
-        - Wave 7-9: Mixed operations (numbers up to 100)
-        - Wave 10+: Multi-step problems or larger numbers
-        
-        If player accuracy is low (< 60%), make the problem easier.
-        If player accuracy is high (> 80%), make it more challenging.`;
+        const prompt = `You are creating a math boss encounter for a space-themed educational game.
+
+WAVE: ${this.wave}
+PLAYER STATS: Score ${this.score}, Accuracy ${this.correctAnswers}/${this.totalAnswers}
+
+TASK: Create a JSON response with a math problem and 4 multiple choice answers.
+
+REQUIRED JSON FORMAT (respond with ONLY this JSON, no other text):
+{
+  "story": "Space battle story in 2-3 sentences",
+  "problem": "Math word problem with numerical answer",
+  "correctAnswer": 42,
+  "choices": [42, 35, 48, 54],
+  "successMessage": "Victory message",
+  "failMessage": "Encouraging failure message"
+}
+
+CRITICAL RULES:
+1. "correctAnswer" must be a number
+2. "choices" must be an array of exactly 4 numbers
+3. The correctAnswer MUST be included in the choices array
+4. Generate 3 plausible wrong answers for the other choices
+
+DIFFICULTY FOR WAVE ${this.wave}:
+${this.wave <= 3 ? '- Simple addition/subtraction (1-50)' :
+                this.wave <= 6 ? '- Multiplication/division (single digits)' :
+                    '- Mixed operations or larger numbers'}
+
+EXAMPLE:
+If the problem is "5 × 7 = ?", then:
+- correctAnswer: 35
+- choices: [35, 28, 42, 30] (35 is correct, others are wrong)
+
+Respond with ONLY the JSON, no explanations.`;
 
         const response = await fetch('/api/chat', {
             method: 'POST',
