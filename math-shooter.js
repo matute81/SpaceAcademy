@@ -521,7 +521,13 @@ class AsteroidMathShooter {
             "failMessage": "Failure message but encouraging"
         }
         
-        IMPORTANT: The "choices" array must contain exactly 4 numbers: the correct answer plus 3 plausible wrong answers. Make sure the correct answer is included in the choices array.
+        CRITICAL REQUIREMENT: The "choices" array must contain exactly 4 numbers:
+        1. The correct answer (from "correctAnswer" field)
+        2. Three plausible wrong answers
+        
+        Example: If correctAnswer is 42, choices might be [42, 35, 48, 54]
+        
+        VERIFY: The correct answer MUST be one of the 4 choices in the array!
         
         The answer should be a single number that the player will choose from multiple choice options.
         Make the math problem challenging but fair for wave ${this.wave}.
@@ -649,6 +655,50 @@ class AsteroidMathShooter {
         this.displayBossEncounter();
     }
 
+    generateGuaranteedChoices(correctAnswer) {
+        // Generate 4 choices that ALWAYS include the correct answer
+        const choices = [correctAnswer]; // Start with correct answer
+
+        // Generate 3 plausible wrong answers
+        for (let i = 0; i < 3; i++) {
+            let wrongAnswer;
+            let attempts = 0;
+
+            do {
+                if (correctAnswer <= 10) {
+                    // For small numbers, generate close alternatives
+                    wrongAnswer = correctAnswer + Math.floor(Math.random() * 10) - 5;
+                } else if (correctAnswer <= 100) {
+                    // For medium numbers, generate within reasonable range
+                    wrongAnswer = correctAnswer + Math.floor(Math.random() * 20) - 10;
+                } else {
+                    // For large numbers, generate broader range
+                    wrongAnswer = correctAnswer + Math.floor(Math.random() * 50) - 25;
+                }
+
+                // Ensure positive number
+                if (wrongAnswer <= 0) wrongAnswer = Math.abs(wrongAnswer) + 1;
+
+                attempts++;
+            } while (choices.includes(wrongAnswer) && attempts < 20);
+
+            // If we couldn't generate a unique wrong answer, use a fallback
+            if (choices.includes(wrongAnswer)) {
+                wrongAnswer = correctAnswer + i + 1;
+            }
+
+            choices.push(wrongAnswer);
+        }
+
+        // Shuffle the choices so correct answer isn't always first
+        for (let i = choices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [choices[i], choices[j]] = [choices[j], choices[i]];
+        }
+
+        return choices;
+    }
+
     displayBossEncounter() {
         document.getElementById('bossStory').textContent = this.bossData.story;
         document.getElementById('bossProblem').textContent = this.bossData.problem;
@@ -666,13 +716,19 @@ class AsteroidMathShooter {
             choices = this.bossData.choices.map(choice => parseInt(choice));
         } else {
             // Fallback: generate choices if AI didn't provide them
-            console.warn('AI did not provide choices array, generating fallback choices');
-            choices = this.generateAnswerChoices(correctAnswer, { choices: 4 });
+            console.warn('AI did not provide choices array, generating guaranteed fallback choices');
+            choices = this.generateGuaranteedChoices(correctAnswer);
         }
 
         console.log('Boss correct answer:', correctAnswer);
         console.log('Boss answer choices:', choices);
         console.log('Correct answer included in choices:', choices.includes(correctAnswer));
+
+        // CRITICAL: Ensure correct answer is in choices
+        if (!choices.includes(correctAnswer)) {
+            console.error('🚨 CRITICAL: Correct answer not in choices! Fixing...');
+            choices[0] = correctAnswer; // Replace first choice with correct answer
+        }
 
         // Shuffle the choices so correct answer isn't always in same position
         const shuffledChoices = [...choices];
