@@ -482,13 +482,8 @@ class AsteroidMathShooter {
         this.wave++;
         this.waveProgress = 0;
 
-        // Check for boss wave (every 3 waves: 3, 6, 9, 12, etc.)
-        if (this.wave % 3 === 0 && this.wave >= 3) {
-            this.startBossEncounter();
-        } else {
-            this.updateUI();
-            // Wave complete - keep status unchanged
-        }
+        // Boss encounter after every wave!
+        this.startBossEncounter();
     }
 
     async startBossEncounter() {
