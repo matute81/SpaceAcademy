@@ -3,8 +3,10 @@
     {
       "source": "/lessons",
       "destination": "/ai-tutor.html"
+    },
+    {
+      "source": "/achievements",
+      "destination": "/achievements.html"
     }
   ]
 }
-
-

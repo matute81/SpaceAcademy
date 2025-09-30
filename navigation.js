@@ -136,4 +136,8 @@ function checkUserSession() {
 // Update system message when AI chatbot loads
 window.addEventListener('load', function() {
     setTimeout(updateAISystemMessage, 1000);
-});
+});//
+ Achievements navigation
+function goToAchievements() {
+    window.location.href = '/achievements.html';
+}

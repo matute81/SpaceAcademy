@@ -743,6 +743,9 @@ class AsteroidMathShooter {
         // Calculate final stats
         const accuracy = this.totalAnswers > 0 ? Math.round((this.correctAnswers / this.totalAnswers) * 100) : 0;
 
+        // Save achievements
+        this.saveAchievements(this.score, this.wave - 1, accuracy);
+
         // Show game over screen
         document.getElementById('finalScore').textContent = this.score;
         document.getElementById('finalWave').textContent = this.wave - 1;
@@ -760,6 +763,9 @@ class AsteroidMathShooter {
         // Calculate final stats
         const accuracy = this.totalAnswers > 0 ? Math.round((this.correctAnswers / this.totalAnswers) * 100) : 0;
 
+        // Save achievements
+        this.saveAchievements(this.score, this.wave - 1, accuracy);
+
         // Show victory screen
         document.getElementById('finalScore').textContent = this.score;
         document.getElementById('finalWave').textContent = this.wave - 1;
@@ -769,6 +775,31 @@ class AsteroidMathShooter {
         document.getElementById('gameOverTitle').textContent = 'Mission Complete! 🎉';
 
         document.getElementById('gameOver').style.display = 'flex';
+    }
+
+    saveAchievements(score, wave, accuracy) {
+        // Load existing achievements
+        const saved = localStorage.getItem('spaceAcademyAchievements');
+        const achievements = saved ? JSON.parse(saved) : {
+            mathGame: {
+                highScore: 0,
+                bestWave: 0,
+                bestAccuracy: 0,
+                totalGames: 0
+            }
+        };
+
+        // Update math game achievements
+        const math = achievements.mathGame;
+        if (score > math.highScore) math.highScore = score;
+        if (wave > math.bestWave) math.bestWave = wave;
+        if (accuracy > math.bestAccuracy) math.bestAccuracy = accuracy;
+        math.totalGames++;
+
+        // Save back to localStorage
+        localStorage.setItem('spaceAcademyAchievements', JSON.stringify(achievements));
+
+        console.log('Achievements saved:', achievements);
     }
 }
 

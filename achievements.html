@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Academy - Achievements</title>
+    <link rel="stylesheet" href="space-academy.css">
+</head>
+<body class="page-enter">
+    <div class="stars"></div>
+    
+    <header class="academy-header">
+        <div class="header-content">
+            <h1>🚀 SPACE ACADEMY</h1>
+            <div class="astronaut-info">
+                <span>👨‍🚀 Astronaut: <span id="astronautName">Cadet</span></span>
+                <button class="achievements-btn" onclick="goToAchievements()">🏆 Achievements</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="achievements-container">
+        <div class="achievements-header">
+            <h2>🏆 Mission Achievements</h2>
+            <p>Track your progress across all Space Academy missions</p>
+        </div>
+
+        <div class="achievements-grid">
+            <!-- Math Game Achievements -->
+            <div class="achievement-card active">
+                <div class="achievement-icon">🎯</div>
+                <div class="achievement-content">
+                    <h3>Math Mission High Score</h3>
+                    <div class="achievement-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Highest Score:</span>
+                            <span class="stat-value" id="highScore">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Best Wave:</span>
+                            <span class="stat-value" id="bestWave">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Best Accuracy:</span>
+                            <span class="stat-value" id="bestAccuracy">0%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Games:</span>
+                            <span class="stat-value" id="totalGames">0</span>
+                        </div>
+                    </div>
+                    <div class="achievement-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="scoreProgress"></div>
+                        </div>
+                        <small>Progress to 5000 points (Victory)</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chinese Game (Coming Soon) -->
+            <div class="achievement-card coming-soon">
+                <div class="achievement-icon">🈯</div>
+                <div class="achievement-content">
+                    <h3>Chinese Mission</h3>
+                    <div class="coming-soon-content">
+                        <p>🚧 Coming Soon!</p>
+                        <p>Master Chinese characters in an exciting space adventure</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Future Achievements -->
+            <div class="achievement-card coming-soon">
+                <div class="achievement-icon">🌟</div>
+                <div class="achievement-content">
+                    <h3>Special Missions</h3>
+                    <div class="coming-soon-content">
+                        <p>🚧 More Adventures Coming!</p>
+                        <p>New challenges and learning experiences await</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="achievements-actions">
+            <button onclick="resetAchievements()" class="reset-btn">🔄 Reset Progress</button>
+            <button onclick="goToMenu()" class="back-btn">← Back to Mission Control</button>
+        </div>
+    </div>
+
+    <script src="sounds.js"></script>
+    <script src="animations.js"></script>
+    <script src="navigation.js"></script>
+    <script>
+        // Achievement tracking system
+        class AchievementTracker {
+            constructor() {
+                this.loadAchievements();
+                this.updateDisplay();
+            }
+
+            loadAchievements() {
+                const saved = localStorage.getItem('spaceAcademyAchievements');
+                this.achievements = saved ? JSON.parse(saved) : {
+                    mathGame: {
+                        highScore: 0,
+                        bestWave: 0,
+                        bestAccuracy: 0,
+                        totalGames: 0
+                    }
+                };
+            }
+
+            saveAchievements() {
+                localStorage.setItem('spaceAcademyAchievements', JSON.stringify(this.achievements));
+            }
+
+            updateMathGameStats(score, wave, accuracy) {
+                const math = this.achievements.mathGame;
+                
+                if (score > math.highScore) math.highScore = score;
+                if (wave > math.bestWave) math.bestWave = wave;
+                if (accuracy > math.bestAccuracy) math.bestAccuracy = accuracy;
+                math.totalGames++;
+                
+                this.saveAchievements();
+            }
+
+            updateDisplay() {
+                const math = this.achievements.mathGame;
+                
+                document.getElementById('highScore').textContent = math.highScore.toLocaleString();
+                document.getElementById('bestWave').textContent = math.bestWave;
+                document.getElementById('bestAccuracy').textContent = math.bestAccuracy + '%';
+                document.getElementById('totalGames').textContent = math.totalGames;
+                
+                // Update progress bar (0-5000 points)
+                const progressPercent = Math.min((math.highScore / 5000) * 100, 100);
+                document.getElementById('scoreProgress').style.width = progressPercent + '%';
+            }
+
+            reset() {
+                if (confirm('Are you sure you want to reset all achievements? This cannot be undone.')) {
+                    localStorage.removeItem('spaceAcademyAchievements');
+                    this.loadAchievements();
+                    this.updateDisplay();
+                    
+                    if (window.spaceSounds) {
+                        window.spaceSounds.playNotification();
+                    }
+                }
+            }
+        }
+
+        // Global functions
+        function resetAchievements() {
+            tracker.reset();
+        }
+
+        function goToAchievements() {
+            // Already on achievements page
+        }
+
+        // Initialize tracker
+        const tracker = new AchievementTracker();
+
+        // Load astronaut name
+        document.addEventListener('DOMContentLoaded', function() {
+            const astronautName = localStorage.getItem('astronautName') || 'Cadet';
+            document.getElementById('astronautName').textContent = astronautName;
+        });
+    </script>
+</body>
+</html>
